@@ -14,16 +14,13 @@
 
 #define BUFFER_SIZE 1024 
 #define SEND_SIZE 1024 
-using namespace std;
 
 int main(int argc, char const *argv[]) 
 { 
-    int sockfd = 0, valread; 
+    int sockfd = 0;
     struct sockaddr_in serv_addr; 
     char buffer[BUFFER_SIZE] = {0}; 
-    char host_address[INET_ADDRSTRLEN];
     char* sendline;
-    const char* helloline = "Hi~ Server";
     if(argc != 3){
         printf("usage: ./rsclient <ipaddress> <port>\n");
         return 0;
@@ -61,7 +58,6 @@ int main(int argc, char const *argv[])
         printf("\n Connection Failed %s(errno: %d)\n",strerror(errno),errno);
         return -1; 
     } 
-
     // Set timeout
     setTimeout(sockfd, 3, 3);
 
@@ -78,9 +74,8 @@ int main(int argc, char const *argv[])
     while(1){
         // Send command
         // Read line
-        const char *prompt = "cmd> ";
-        sendline = readline(prompt);
-
+        sendline = readline("cmd> ");
+        //sendline = "exit";
         if(strlen(sendline) > SEND_SIZE){
             printf("Send command error: Command too long");
             continue;
@@ -95,10 +90,13 @@ int main(int argc, char const *argv[])
         //if exit command
         if(!strcmp(sendline, "exit")){
             //exit 
+            //free sendLine
+            free(sendline);
             printf("Exit the server\n");
             break;
         }
-
+        //free sendLine
+        free(sendline);
         //Wait and Recive data
         while(1){
             memset(buffer, 0, BUFFER_SIZE); // Clean buffer before each recv
@@ -127,13 +125,7 @@ int main(int argc, char const *argv[])
                 break;
             }
         }
-
-        //free sendLine
-        if(sendline){
-            free(sendline);
-        }
     }
-
     // End of connection
     close(sockfd);
     return 0; 

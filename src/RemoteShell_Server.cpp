@@ -89,10 +89,8 @@ int main(int argc, char** argv){
 
                 // Handle the command
                 FILE *fp;
-                char *command;
                 const char* command_tmp = " 2>&1"; // get stderr
-                memset(command, 0, strlen(command_tmp) + strlen(buffer) + 1);
-                char *result = (char*)malloc(strlen(command_tmp)+strlen(buffer)+1);
+                char *command = (char*)malloc(strlen(command_tmp)+strlen(buffer)+1);
                 //construct command with error return
                 strcpy(command, buffer);
                 strcat(command, command_tmp);
@@ -100,30 +98,14 @@ int main(int argc, char** argv){
                 printf("*Run command: %s\n", command);
                 //char *command = buffer;
                 fp = popen(command, "r");
+                free(command);
                 if(fp == NULL){
                     printf("popen error!\n");
                     exit(1);
                 }
 
                 //socket_send_file_size(connfd, fp, FILE_LEN_BUFFER);
-                // // Get file size
-                // fseek(fp,0,SEEK_END); //to the end of file
-                // int fileLen = ftell(fp); 
-                // fseek(fp,0,SEEK_SET); //return to start
-
-                // // Read and send result file
-
-                // // Send file size
-                // char  len_buffer[FILE_LEN_BUFFER];
-                // memset(len_buffer,0,sizeof(len_buffer));
-                // sprintf(len_buffer,"%d",fileLen);
-                // len_buffer[FILE_LEN_BUFFER - 1] = '\0';
-                // printf("*Send file length: %s\n", len_buffer);
-                // if (send(connfd, len_buffer, FILE_LEN_BUFFER, 0) < 0)
-                // {
-                //     printf("Send data error: %s(errno: %d)\n", strerror(errno), errno);
-                //     break;
-                // }
+ 
                 int block_len = 0;
                 while( (block_len = fread(buffer, sizeof(char), BUFFER_SIZE, fp)) > 0)
                 {
@@ -133,6 +115,7 @@ int main(int argc, char** argv){
                         printf("Send data error: %s(errno: %d)\n", strerror(errno), errno);
                         break;
                     }
+                    printf("*Sending: %s\n", buffer);
                     bzero(buffer, sizeof(buffer));
                 }
                 // Close file 

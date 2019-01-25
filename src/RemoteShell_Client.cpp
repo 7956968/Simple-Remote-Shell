@@ -74,7 +74,7 @@ int main(int argc, char const *argv[])
     while(1){
         // Send command
         // Read line
-        sendline = readline("cmd> ");
+        sendline = readline("client $ ");
         //sendline = "exit";
         if(strlen(sendline) > SEND_SIZE){
             printf("Send command error: Command too long");
@@ -104,7 +104,7 @@ int main(int argc, char const *argv[])
             if(recv_size >0)
             {
                 // Handle the buffer
-                printf("*Server return message: \n%s\n", buffer);
+                //printf("*Server return message: \n%s\n", buffer);
                 if(recv_size < BUFFER_SIZE){
                     break;
                 }

@@ -21,3 +21,4 @@ void socket_send_file_size(int sockfd, FILE* fp, int buffer_size);
 void setTimeout(int sockfd, int send_time, int recv_time);
 
 void simpleSocketSend(int sockfd, char* buffer, int buffer_size);
+int simpleSocketRecv(int sockfd, char* buffer, int buffer_size);

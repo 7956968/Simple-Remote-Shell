@@ -60,23 +60,15 @@ int main(int argc, char** argv){
             while(1){
                 //connection success receiving cmd
                 memset(buffer, 0, BUFFER_SIZE);
-                int recv_size = (int)recv(connfd, buffer, BUFFER_SIZE, 0);
-                if( recv_size >0 )
-                {
-                    // Handle the buffer
-                    printf("receive message from client: %s\n", buffer);
-                }
-                else{
-                    // Handle socket recv error
-                    if((recv_size<0) &&(recv_size == EAGAIN||recv_size == EWOULDBLOCK||recv_size == EINTR)) //error code, connection doesn't fail continue
-                    {
-                        printf("\n Socket error %s(errno: %d)\n", strerror(errno),errno);
-                        continue;
-                    }
-                    printf("*End of receive \n");
+                if(simpleSocketRecv(connfd, buffer, BUFFER_SIZE) < 0){
+                    //error with socket
+                    printf("*End of client \n");
+                    close(connfd);
                     break;
+                }else{
+                    printf("Received message from client: %s\n", buffer);
                 }
-
+                
                 //exit the server
                 if(!strcmp(buffer, "exit")){
                     //close connection
@@ -103,18 +95,10 @@ int main(int argc, char** argv){
                     exit(1);
                 }
 
-                //socket_send_file_size(connfd, fp, FILE_LEN_BUFFER);
- 
                 int block_len = 0;
                 while( (block_len = fread(buffer, sizeof(char), BUFFER_SIZE, fp)) > 0)
                 {
                     // Send data
-                    // if (send(connfd, buffer, block_len, 0) < 0)
-                    // {
-                    //     printf("Send data error: %s(errno: %d)\n", strerror(errno), errno);
-                    //     break;
-                    // }
-                    // printf("*Sending: %s\n", buffer);
                     simpleSocketSend(connfd, buffer, block_len);
                     bzero(buffer, sizeof(buffer));
                 }

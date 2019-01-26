@@ -13,27 +13,6 @@ bool portVarify(const char* port){
     }
     return true;
 }
-void soket_recv(int sockfd, char* buffer, int buffer_size){
-    while(1){
-        memset(buffer, 0, buffer_size); // Clean buffer before each recv
-        int recv_size = (int)recv(sockfd, buffer, buffer_size, 0);
-        if( recv_size >0 )
-        {
-            // Handle the buffer
-            printf("Server return message: \n%s\n",buffer );
-        }
-        else{
-            // Handle socket recv error
-            if((recv_size<0) &&(recv_size == EAGAIN||recv_size == EWOULDBLOCK||recv_size == EINTR)) //error code, connection doesn't fail continue
-            {
-                printf("\n Socket error %s(errno: %d)\n", strerror(errno),errno);
-                continue;
-            }
-            printf("*End of receive \n");
-            break;
-        }
-    }
-}
 
 void socket_send_file_size(int sockfd, FILE* fp, int buffer_size){
     if(fp == NULL){
@@ -56,13 +35,38 @@ void socket_send_file_size(int sockfd, FILE* fp, int buffer_size){
         printf("Send data error: %s(errno: %d)\n", strerror(errno), errno);
     }
 }
+
 void simpleSocketSend(int sockfd, char* buffer, int buffer_size){
     // Send data
     if (send(sockfd, buffer, buffer_size, 0) < 0)
     {
         printf("Send data error: %s(errno: %d)\n", strerror(errno), errno);
     }
-    printf("*Sending: %s\n", buffer);
+    printf("*Sending: \n%s\n", buffer);
+}
+
+int simpleSocketRecv(int sockfd, char* buffer, int buffer_size){
+        int recv_size = (int)recv(sockfd, buffer, buffer_size, 0);
+        if( recv_size >0 )
+        {
+            // Handle the buffer
+            if(recv_size < buffer_size){
+                return 0;
+            }else{
+                return 1;
+            }
+            //printf("*Received message: \n%s\n",buffer );
+        }
+        else{
+            // Handle socket recv error
+            if((recv_size<0) &&(recv_size == EAGAIN||recv_size == EWOULDBLOCK||recv_size == EINTR)) //error code, connection doesn't fail continue
+            {
+                printf("\n Socket error %s(errno: %d)\n", strerror(errno),errno);
+                return -1;
+            }
+            //printf("*End of receive \n");
+            return 0;
+        }
 }
 
 void setTimeout(int sockfd, int send_time, int recv_time){

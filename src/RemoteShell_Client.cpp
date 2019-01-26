@@ -82,12 +82,9 @@ int main(int argc, char const *argv[])
         }
         
         printf("*Send command to server:\n%s\n", sendline);
-        // if( send(sockfd, sendline, strlen(sendline), 0) < 0){
-        //     printf("Send command error: %s(errno: %d)\n", strerror(errno), errno);
-        //     return 0;
-        // }
         simpleSocketSend(sockfd, sendline, strlen(sendline));
         printf("*Client command sent\n"); 
+
         //if exit command
         if(!strcmp(sendline, "exit")){
             //exit 
@@ -99,30 +96,16 @@ int main(int argc, char const *argv[])
         //free sendLine
         free(sendline);
         //Wait and Recive data
+        printf("*Server return message: \n");
         while(1){
             memset(buffer, 0, BUFFER_SIZE); // Clean buffer before each recv
-            int recv_size = (int)recv(sockfd, buffer, BUFFER_SIZE, 0);
-            if(recv_size >0)
-            {
-                // Handle the buffer
-                printf("*Server return message: \n%s\n", buffer);
-                if(recv_size < BUFFER_SIZE){
-                    break;
-                }
-            }
-            else{
-                if(recv_size==-1 && errno==EAGAIN)
-                {
-                        printf("Timeout\n");
-                        break;
-                }
-                // Handle socket recv error
-                if((recv_size<0) &&(recv_size == EWOULDBLOCK||recv_size == EINTR)) //error code, connection doesn't fail continue
-                {
-                    printf("\n Socket error %s(errno: %d)\n", strerror(errno),errno);
-                    continue;
-                }
-                printf("*Data recive success! \n");
+
+            if(simpleSocketRecv(sockfd, buffer, BUFFER_SIZE) > 0){
+                printf("%s", buffer);
+                continue;
+            }else{
+                printf("%s", buffer);
+                printf("*End of data \n");
                 break;
             }
         }

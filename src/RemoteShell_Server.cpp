@@ -110,12 +110,13 @@ int main(int argc, char** argv){
                 while( (block_len = fread(buffer, sizeof(char), BUFFER_SIZE, fp)) > 0)
                 {
                     // Send data
-                    if (send(connfd, buffer, block_len, 0) < 0)
-                    {
-                        printf("Send data error: %s(errno: %d)\n", strerror(errno), errno);
-                        break;
-                    }
-                    printf("*Sending: %s\n", buffer);
+                    // if (send(connfd, buffer, block_len, 0) < 0)
+                    // {
+                    //     printf("Send data error: %s(errno: %d)\n", strerror(errno), errno);
+                    //     break;
+                    // }
+                    // printf("*Sending: %s\n", buffer);
+                    simpleSocketSend(connfd, buffer, block_len);
                     bzero(buffer, sizeof(buffer));
                 }
                 // Close file 

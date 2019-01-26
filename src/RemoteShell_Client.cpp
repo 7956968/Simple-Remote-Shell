@@ -82,10 +82,11 @@ int main(int argc, char const *argv[])
         }
         
         printf("*Send command to server:\n%s\n", sendline);
-        if( send(sockfd, sendline, strlen(sendline), 0) < 0){
-            printf("Send command error: %s(errno: %d)\n", strerror(errno), errno);
-            return 0;
-        }
+        // if( send(sockfd, sendline, strlen(sendline), 0) < 0){
+        //     printf("Send command error: %s(errno: %d)\n", strerror(errno), errno);
+        //     return 0;
+        // }
+        simpleSocketSend(sockfd, sendline, strlen(sendline));
         printf("*Client command sent\n"); 
         //if exit command
         if(!strcmp(sendline, "exit")){
@@ -104,7 +105,7 @@ int main(int argc, char const *argv[])
             if(recv_size >0)
             {
                 // Handle the buffer
-                //printf("*Server return message: \n%s\n", buffer);
+                printf("*Server return message: \n%s\n", buffer);
                 if(recv_size < BUFFER_SIZE){
                     break;
                 }

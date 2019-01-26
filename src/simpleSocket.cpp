@@ -56,6 +56,14 @@ void socket_send_file_size(int sockfd, FILE* fp, int buffer_size){
         printf("Send data error: %s(errno: %d)\n", strerror(errno), errno);
     }
 }
+void simpleSocketSend(int sockfd, char* buffer, int buffer_size){
+    // Send data
+    if (send(sockfd, buffer, buffer_size, 0) < 0)
+    {
+        printf("Send data error: %s(errno: %d)\n", strerror(errno), errno);
+    }
+    printf("*Sending: %s\n", buffer);
+}
 
 void setTimeout(int sockfd, int send_time, int recv_time){
     struct timeval timeout_send={send_time,0};//3s

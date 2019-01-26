@@ -12,8 +12,8 @@
 #include <readline/history.h>
 #include "simpleSocket.h"
 
-#define BUFFER_SIZE 1024 
-#define SEND_SIZE 1024 
+// #define BUFFER_SIZE 1024 
+// #define SEND_SIZE 1024 
 
 int main(int argc, char const *argv[]) 
 { 

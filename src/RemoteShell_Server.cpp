@@ -9,8 +9,7 @@
 #include<ctype.h>
 #include "simpleSocket.h"
 
-#define BUFFER_SIZE 1024
-#define FILE_LEN_BUFFER 100
+// #define BUFFER_SIZE 1024
 
 
 int main(int argc, char** argv){

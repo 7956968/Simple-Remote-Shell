@@ -13,10 +13,10 @@ bool portVarify(const char* port){
     }
     return true;
 }
-void soket_recv(int sockfd, char* buffer, int BUFFER_SIZE){
+void soket_recv(int sockfd, char* buffer, int buffer_size){
     while(1){
-        memset(buffer, 0, BUFFER_SIZE); // Clean buffer before each recv
-        int recv_size = (int)recv(sockfd, buffer, BUFFER_SIZE, 0);
+        memset(buffer, 0, buffer_size); // Clean buffer before each recv
+        int recv_size = (int)recv(sockfd, buffer, buffer_size, 0);
         if( recv_size >0 )
         {
             // Handle the buffer

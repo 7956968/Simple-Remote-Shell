@@ -8,9 +8,13 @@
 #include<unistd.h>
 #include<ctype.h>
 
+#define BUFFER_SIZE 1024 
+#define SEND_SIZE 1024 
+
+
 bool portVarify(const char* port);
 
-void soket_recv(int sockfd, char* buffer, int BUFFER_SIZE);
+void soket_recv(int sockfd, char* buffer, int buffer_size);
 
 void socket_send_file_size(int sockfd, FILE* fp, int buffer_size);
 
